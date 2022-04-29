@@ -54,6 +54,7 @@ jobs:
             return context.payload.ref.replace(/\/refs\/tags\//, '');
       - name: Echo
         run: echo ${{ steps.tag.outputs.result }}
+      - run: echo '1234567890'
       #- name: Build APK
       #  run: |
       #    export BRANCH_NAME=${GITHUB_REF##*/}
