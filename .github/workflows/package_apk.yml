@@ -36,3 +36,16 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - name: Install Pubs
+        run: |
+          flutter doctor
+          flutter pub get
+      - name: Build APK
+        run: |
+          export BRANCH_NAME=${GITHUB_REF##*/}
+          if [[ $BRANCH_NAME = 'prod' ]]; then
+            export APP_ENV="Prod"
+          else
+            export APP_ENV="Stage"
+          fi
+          flutter build apk --dart-define=APP_ENV=$APP_ENV --release
