@@ -56,3 +56,8 @@ jobs:
             export APP_ENV="Stage"
           fi
           flutter build apk --dart-define=APP_ENV=$APP_ENV --release
+      - uses: actions/upload-artifact@v1
+        with:
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
+          
