@@ -28,6 +28,10 @@ jobs:
         with:
           flutter-version: '2.10.3'
           channel: 'stable'
+          cache: true
+          cache-key: flutter # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+          architecture: x64 # optional, x64 or arm64
       - run: flutter --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
