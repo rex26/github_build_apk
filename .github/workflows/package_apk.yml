@@ -45,15 +45,15 @@ jobs:
       #    echo test, and deploy your project.
       #- run: flutter doctor
       #- run: flutter pub get
-      - uses: olegtarasov/get-tag@v2 # that generate $GIT_TAG_NAME env
-        id: tagName
+      - name: Extract tag name
+        id: tag
+        uses: actions/github-script@0.2.0
         with:
-          tagRegex: 'v[0-9]+.[0-9]+.[0-9]+-stage-[0-9]+' # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.
-      - name: Replace YAML version with tag version
-        run: |
-          sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
-          echo "Tag used version:"$GIT_TAG_NAME
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\//, '');
+      - name: Echo
+        run: echo ${{ steps.tag.outputs.result }}
       #- name: Build APK
       #  run: |
       #    export BRANCH_NAME=${GITHUB_REF##*/}
