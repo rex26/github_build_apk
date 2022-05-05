@@ -54,7 +54,7 @@ jobs:
           git config --global user.name 'rex26'
           git config --global user.email '858790345@qq.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "auto increased build number:${{ steps.get_upgrade_flutter_version.outputs.version }}"
+          git commit -am "auto increased build number:${{ steps.get_increased_flutter_version.outputs.version }}"
           git push
       # Runs a single command using the runners shell
       #- name: Run a one-line script
