@@ -22,15 +22,8 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '2.10.3'
-          channel: 'stable'
-          cache: true
-          cache-key: flutter # optional, change this to force refresh cache
-          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
-          architecture: x64 # optional, x64 or arm64
-      - run: flutter --version
+
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
@@ -39,7 +32,7 @@ jobs:
         run: echo '::set-output name=old_version::`grep 'version:' pubspec.yaml | sed 's/version://'`'
       - name: get last commit message
         id: get_last_commit_message
-        run: echo '::set-output name=last_commit_message::$(echo `git log -1 --pretty=%B`)'
+        run: echo "::set-output name=last_commit_message::$(echo `git log -1 --pretty=%B`)"
       - name: check latest commit
         id: should_run
         if: ${{ github.event_name != 'schedule' }}
