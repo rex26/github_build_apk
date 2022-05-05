@@ -30,7 +30,7 @@ jobs:
       # print old version
       - name: print old version
         id: print_old_version
-        run: echo '::set-output name=old_version::$(echo `grep 'version:' pubspec.yaml | sed 's/version://'`)'
+        run: echo "::set-output name=old_version::$(echo `grep 'version:' pubspec.yaml | sed 's/version://'`)"
       - name: get last commit message
         id: get_last_commit_message
         run: echo "::set-output name=last_commit_message::$(echo `git log -1 --pretty=%B`)"
