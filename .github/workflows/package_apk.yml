@@ -33,18 +33,14 @@ jobs:
       - run: flutter --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
-      #- name: Get flutter version
-      #  id: get_flutter_version
-      #  uses: its404/get-flutter-version@v1.0.0
-      #- name: Output flutter version
-      #  run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}]
-      #- run: echo 'final version:' ${{ steps.get_flutter_version.outputs.build_number }} + ${{ github.run_number }}
-      
-      - run: echo `grep 'version:' pubspec.yaml | sed 's/version://'`
-      - run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
-      #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
-      #- run: git add pubspec.yaml && git commit -m "auto increase build number:`grep 'version:' pubspec.yaml | sed 's/version://'`" && git push origin main
+
+      # print old version
+      - name: print old version
+        run: echo `grep 'version:' pubspec.yaml | sed 's/version://'`
+      # increase flutter build number
+      #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
+      - name: increase build number and write to file
+        run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
       - name: Get increased flutter version
         id: get_increased_flutter_version
         run: echo '::set-output name=version::`grep 'version:' pubspec.yaml | sed 's/version://'`'
@@ -56,7 +52,28 @@ jobs:
           git add pubspec.yaml
           git commit -m "auto increased build number:${{ steps.get_increased_flutter_version.outputs.version }}"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push
+          git push origin main
+      - name: Build APK
+        run: |
+          export BRANCH_NAME=${GITHUB_REF##*/}
+          if [[ $BRANCH_NAME = 'prod' ]]; then
+            export APP_ENV="Prod"
+          else
+            export APP_ENV="Stage"
+          fi
+          flutter build apk --dart-define=APP_ENV=$APP_ENV --release
+      - uses: actions/upload-artifact@v1
+        with:
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
+      
+      #- name: Get flutter version
+      #  id: get_flutter_version
+      #  uses: its404/get-flutter-version@v1.0.0
+      #- name: Output flutter version
+      #  run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}]
+      #- run: echo 'final version:' ${{ steps.get_flutter_version.outputs.build_number }} + ${{ github.run_number }}
+
       # Runs a single command using the runners shell
       #- name: Run a one-line script
       #  run: echo Hello, world!
