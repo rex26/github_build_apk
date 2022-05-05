@@ -38,7 +38,7 @@ jobs:
         uses: its404/get-flutter-version@v1.0.0
       - name: Output flutter version
         run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}]
-      - run: echo 'final version:' ${{ steps.get_flutter_version.outputs.build_number+github.run_number }}
+      - run: echo 'final version:' (${{ steps.get_flutter_version.outputs.build_number }} + ${{ github.run_number }})
       # Runs a single command using the runners shell
       #- name: Run a one-line script
       #  run: echo Hello, world!
