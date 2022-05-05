@@ -43,14 +43,14 @@ jobs:
       - run: echo ${{ steps.should_run.outputs.should_run }}
       
       - name: increase build number and write to file
-        if: ${{ steps.should_run.outputs.should_run != 'false' }} && ${{ github.event_name == 'schedule' }}
+        if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
         run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
       - name: Get increased flutter version
         id: get_increased_flutter_version
-        if: ${{ steps.should_run.outputs.should_run != 'false' }} && ${{ github.event_name == 'schedule' }}
+        if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
         run: echo '::set-output name=new_version::`grep 'version:' pubspec.yaml | sed 's/version://'`'
       - name: Commit auto increased build number
-        if: ${{ steps.should_run.outputs.should_run != 'false' }} && ${{ github.event_name == 'schedule' }}
+        if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
         run: |
           git config --global user.name 'rex26'
           git config --global user.email '858790345@qq.com'
