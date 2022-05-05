@@ -42,7 +42,7 @@ jobs:
         run: echo '::set-output name=last_commit_message::`git log -1 --pretty=%B`'
       - name: check latest commit
         id: should_run
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'schedule' }}
         #run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
         run: test ${{ steps.get_last_commit_message.outputs.last_commit_message }} = "CI auto increased build number:${{ steps.get_increased_flutter_version.outputs.new_version }}" && echo "::set-output name=should_run::false"
       # increase flutter build number
