@@ -32,8 +32,20 @@ jobs:
           architecture: x64 # optional, x64 or arm64
       - run: flutter --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      #- uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
+      - name: Get flutter version
+        id: get_flutter_version
+        uses: its404/get-flutter-version@v1.0.0
+      - name: Output flutter version
+        run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}        
+      - name: Print new build number
+        run: echo "Build number is $BUILD_NUMBER"
+      - run: echo 'final number:'+ ${{ steps.buildnumber.outputs.BUILD_NUMBER + steps.get_flutter_version.outputs.build_number}}
       # Runs a single command using the runners shell
       #- name: Run a one-line script
       #  run: echo Hello, world!
