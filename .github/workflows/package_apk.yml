@@ -51,6 +51,8 @@ jobs:
 
       - name: Commit auto increased build number
         run: |
+          git config --global user.name 'rex26'
+          git config --global user.email '858790345@qq.com'
           git commit -am "auto increased build number:${{ steps.get_increased_flutter_version.outputs.version }}"
           git push
       # Runs a single command using the runners shell
