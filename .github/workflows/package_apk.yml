@@ -45,16 +45,12 @@ jobs:
       #    echo test, and deploy your project.
       #- run: flutter doctor
       #- run: flutter pub get
-      - name: Extract tag name
-        id: tag
-        uses: actions/github-script@0.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            return context.payload.ref.replace(/\/refs\/tags\//, '');
-      - name: Echo
-        run: echo ${{ steps.tag.outputs.result }}
-      - run: echo '1234567890'
+      - name: Output Run ID
+        run: echo ${{ github.run_id }}
+      - name: Output Run Number
+        run: echo ${{ github.run_number }}
+      - name: Output Run Attempt
+        run: echo ${{ github.run_attempt }}
       #- name: Build APK
       #  run: |
       #    export BRANCH_NAME=${GITHUB_REF##*/}
