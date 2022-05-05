@@ -45,9 +45,17 @@ jobs:
       - run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
       #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
       #- run: git add pubspec.yaml && git commit -m "auto increase build number:`grep 'version:' pubspec.yaml | sed 's/version://'`" && git push origin main
-      - run: echo `grep 'version:' pubspec.yaml | sed 's/version://'`
+      - name: Get upgraded flutter version
+        id: get_upgrade_flutter_version
+        run: echo '::set-output name=version::`grep 'version:' pubspec.yaml | sed 's/version://'`'
 
-      
+      - name: Commit auto upgrade build number
+        run: |
+          git config --global user.name 'rex26'
+          git config --global user.email '858790345@qq.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "auto increase build number:${{ steps.get_upgrade_flutter_version.outputs.version }}"
+          git push origin main
       # Runs a single command using the runners shell
       #- name: Run a one-line script
       #  run: echo Hello, world!
@@ -67,17 +75,5 @@ jobs:
       #- name: Output Run Attempt
       #  run: echo ${{ github.run_attempt }}
         
-      - name: Build APK
-        run: |
-          export BRANCH_NAME=${GITHUB_REF##*/}
-          if [[ $BRANCH_NAME = 'prod' ]]; then
-            export APP_ENV="Prod"
-          else
-            export APP_ENV="Stage"
-          fi
-          flutter build apk --dart-define=APP_ENV=$APP_ENV --release
-      - uses: actions/upload-artifact@v1
-        with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+
           
