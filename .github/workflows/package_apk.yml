@@ -40,6 +40,7 @@ jobs:
       #  run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}]
       - run: echo `grep 'version:' pubspec.yaml | sed 's/version://'`
       - run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
+      - run: echo `grep 'version:' pubspec.yaml | sed 's/version://'`
       #- run: echo 'final version:' ${{ steps.get_flutter_version.outputs.build_number }} + ${{ github.run_number }}
       
       # Runs a single command using the runners shell
@@ -53,12 +54,14 @@ jobs:
       #    echo test, and deploy your project.
       #- run: flutter doctor
       #- run: flutter pub get
-      - name: Output Run ID
-        run: echo ${{ github.run_id }}
-      - name: Output Run Number
-        run: echo ${{ github.run_number }}
-      - name: Output Run Attempt
-        run: echo ${{ github.run_attempt }}
+      
+      #- name: Output Run ID
+      #  run: echo ${{ github.run_id }}
+      #- name: Output Run Number
+      #  run: echo ${{ github.run_number }}
+      #- name: Output Run Attempt
+      #  run: echo ${{ github.run_attempt }}
+        
       #- name: Build APK
       #  run: |
       #    export BRANCH_NAME=${GITHUB_REF##*/}
