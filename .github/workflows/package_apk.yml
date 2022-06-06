@@ -5,9 +5,10 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-   branches: [ main ]
+  #push:
+  # branches: [ main ]
   schedule:
+    # 周一到周五每天17:00打包(UTC 11:00)
     - cron: '00 11 * * 1-5'
 
   # Allows you to run this workflow manually from the Actions tab
@@ -37,6 +38,7 @@ jobs:
         id: should_run
         if: ${{ github.event_name == 'schedule' }}
         #run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
+        # 如果最后一条提交记录为自动新增版本, 则认为今天没有新commit(也可能是上传失败导致), 不执行打包: should_run = false
         run: test '${{ steps.get_last_commit_message.outputs.last_commit_message }}' = 'CI auto increased build number:${{ steps.get_old_version.outputs.old_version }}' && echo "::set-output name=should_run::false" || echo 'has new commit'
       # increase flutter build number by run number
       #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
@@ -68,18 +70,11 @@ jobs:
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
       - name: Build APK
-        run: |
-          export BRANCH_NAME=${GITHUB_REF##*/}
-          if [[ $BRANCH_NAME = 'prod' ]]; then
-            export APP_ENV="Prod"
-          else
-            export APP_ENV="Stage"
-          fi
-          flutter build apk --dart-define=APP_ENV=$APP_ENV --release
-      - uses: actions/upload-artifact@v1
-        with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+        run: flutter build apk
+      #- uses: actions/upload-artifact@v1
+      #  with:
+      #    name: release-apk
+      #    path: build/app/outputs/apk/release/app-release.apk
           
       #- name: Get flutter version
       #  id: get_flutter_version
