@@ -23,8 +23,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-
-
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
@@ -71,6 +69,13 @@ jobs:
           architecture: x64 # optional, x64 or arm64
       - name: Build APK
         run: flutter build apk
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: stage_group
+          file: build/app/outputs/apk/release/app-release.apk
       #- uses: actions/upload-artifact@v1
       #  with:
       #    name: release-apk
