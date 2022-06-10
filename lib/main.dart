@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var param = 123;
-    
+    param?.toString();
     return MaterialApp(
       title: 'Flutter Github build APK Demo',
       theme: ThemeData(
