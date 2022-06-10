@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  # trigger CI error runApp(const MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +10,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var param = 123;
+    
     return MaterialApp(
       title: 'Flutter Github build APK Demo',
       theme: ThemeData(
