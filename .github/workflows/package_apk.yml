@@ -35,18 +35,10 @@ jobs:
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
           
-      - name: analyze code
-        run: |
-          OUTPUT="$(flutter analyze)"
-          echo "$OUTPUT"
-          echo
-          if grep -q "error •" <<< "$OUTPUT"; then
-              echo "flutter analyze found errors"
-              exit 1
-          else
-              echo "flutter analyze didn't find any errors"
-              exit 0
-          fi
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Analyze Dart
+        uses: zgosalvez/github-actions-analyze-dart@v1
         
       - name: get old version
         id: get_old_version
