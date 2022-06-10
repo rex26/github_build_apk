@@ -46,3 +46,8 @@ jobs:
               echo "flutter analyze didn't find any errors"
               exit 0
           fi
+        shell: sh
+        
+        
+        
+        
