@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var param = 123;
+    // trigger analyze warning
     param?.toString();
     return MaterialApp(
       title: 'Flutter Github build APK Demo',
