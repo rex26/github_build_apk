@@ -53,7 +53,7 @@ jobs:
       - name: Get increased flutter version
         id: get_increased_flutter_version
         if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
-        run: echo '::set-output name=new_version::`grep 'version:' pubspec.yaml | sed 's/version://'`'
+        run: echo '::set-output name=new_version::`grep 'version:' pubspec.yaml | sed 's/version://' | xargs`'
 
       - uses: subosito/flutter-action@v2
         with:
