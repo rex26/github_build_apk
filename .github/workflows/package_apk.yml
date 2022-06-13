@@ -35,7 +35,7 @@ jobs:
         run: echo "::set-output name=last_commit_message::$(echo `git log -1 --pretty=%B`)"
       - name: check latest commit
         id: should_run
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'schedule' }}
         #run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
         # 如果最后一条提交记录为自动新增版本, 则认为今天没有新commit(也可能是上传失败导致), 不执行打包: should_run = false
         run: test '${{ steps.get_last_commit_message.outputs.last_commit_message }}' = 'CI auto increased build number:${{ steps.get_old_version.outputs.old_version }}' && echo "::set-output name=should_run::false" || echo 'has new commit'
@@ -44,7 +44,7 @@ jobs:
       - run: echo ${{ steps.should_run.outputs.should_run }}
       
       - name: if false interrupt flow
-        if: ${{ steps.should_run.outputs.should_run == 'false' && github.event_name == 'schedule' }}
+        if: ${{ steps.should_run.outputs.should_run == 'false' && github.event_name != 'schedule' }}
         run: exit 1
         
       - name: increase build number and write to file
