@@ -46,7 +46,7 @@ jobs:
       
       - name: if false interrupt flow
         if: ${{ steps.should_run.outputs.should_run == 'false' && github.event_name != 'schedule' }}
-        run: exit 1
+        run: echo 'ignore scheduled build task' && exit 1
         
       - name: increase build number and write to file
         if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
