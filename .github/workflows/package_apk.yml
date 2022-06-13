@@ -9,7 +9,8 @@ on:
   # branches: [ main ]
   schedule:
     # 周一到周五每天17:00打包(UTC 11:00)
-    - cron: '00 11 * * 1-5'
+    #- cron: '00 11 * * 1-5'
+    - cron: '30 * * * 1-5'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -92,36 +93,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin main
           
-      #- uses: actions/upload-artifact@v1
-      #  with:
-      #    name: release-apk
-      #    path: build/app/outputs/apk/release/app-release.apk
-          
-      #- name: Get flutter version
-      #  id: get_flutter_version
-      #  uses: its404/get-flutter-version@v1.0.0
-      #- name: Output flutter version
-      #  run: echo 'version_number:' ${{ steps.get_flutter_version.outputs.version_number }} ' build_number:' ${{ steps.get_flutter_version.outputs.build_number }}]
-      #- run: echo 'final version:' ${{ steps.get_flutter_version.outputs.build_number }} + ${{ github.run_number }}
 
-      # Runs a single command using the runners shell
-      #- name: Run a one-line script
-      #  run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      #- name: Run a multi-line script
-      #  run: |
-      #    echo Add other actions to build,
-      #    echo test, and deploy your project.
-      #- run: flutter doctor
-      #- run: flutter pub get
-      
-      #- name: Output Run ID
-      #  run: echo ${{ github.run_id }}
-      #- name: Output Run Number
-      #  run: echo ${{ github.run_number }}
-      #- name: Output Run Attempt
-      #  run: echo ${{ github.run_attempt }}
         
 
           
