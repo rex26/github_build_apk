@@ -82,9 +82,9 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: stage_group
-          releaseNotes: 'CI daily build'
+          releaseNotes: 'CI ${{ github.event_name }} build. CI number ${{ github.run_number }}.'
           file: build/app/outputs/apk/release/app-release.apk
-          
+
       - name: Commit auto increased build number
         if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
         run: |
@@ -92,7 +92,7 @@ jobs:
           git config --global user.email '858790345@qq.com'
           git pull
           git add pubspec.yaml
-          git commit -m "CI auto increased build number:${{ steps.get_increased_flutter_version.outputs.new_version }}"
+          git commit -m "CI auto increased build number:${{ steps.get_increased_flutter_version.outputs.new_version }}. CI number ${{ github.run_number }}. "
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin main
           
