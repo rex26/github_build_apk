@@ -72,6 +72,7 @@ jobs:
           flutter doctor
           flutter clean
           flutter pub get
+          flutter --version
 
       - uses: invertase/github-action-dart-analyzer@v1
         with:
