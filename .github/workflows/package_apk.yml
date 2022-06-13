@@ -90,6 +90,7 @@ jobs:
         run: |
           git config --global user.name 'rex26'
           git config --global user.email '858790345@qq.com'
+          git pull
           git add pubspec.yaml
           git commit -m "CI auto increased build number:${{ steps.get_increased_flutter_version.outputs.new_version }}"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
