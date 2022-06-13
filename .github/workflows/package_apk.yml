@@ -39,7 +39,8 @@ jobs:
         #run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
         # 如果最后一条提交记录为自动新增版本, 则认为今天没有新commit(也可能是上传失败导致), 不执行打包: should_run = false
         #run: test '${{ steps.get_last_commit_message.outputs.last_commit_message }}' = 'CI auto increased build number:${{ steps.get_old_version.outputs.old_version }}' && echo "::set-output name=should_run::false" || echo 'has new commit'
-        run: [[ ${{ steps.get_last_commit_message.outputs.last_commit_message }} =~ 'CI auto increased build number' ]] && echo "::set-output name=should_run::false" || echo 'has new commit'
+        run: |
+          [[ '${{ steps.get_last_commit_message.outputs.last_commit_message }}' =~ 'CI auto increased build number' ]] && echo "::set-output name=should_run::false" || echo 'has new commit'
       # increase flutter build number by run number
       #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
       - run: echo '${{ steps.should_run.outputs.should_run }}'
