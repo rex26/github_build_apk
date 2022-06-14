@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: package_apk
+name: daily_package_apk
 
 # Controls when the workflow will run
 on:
@@ -45,11 +45,11 @@ jobs:
       # increase flutter build number by run number
       #- run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+${{ github.run_number }})/e' pubspec.yaml
       - run: echo '${{ steps.should_run.outputs.should_run }}'
-      
+
       - name: if false interrupt flow
         if: ${{ steps.should_run.outputs.should_run == 'false' && github.event_name == 'schedule' }}
         run: echo 'ignore scheduled build task' && exit 1
-        
+
       - name: increase build number and write to file
         if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
         run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
@@ -60,13 +60,13 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.10.3'
+          flutter-version: '2.10.4'
           channel: 'stable'
           cache: true
           cache-key: flutter # optional, change this to force refresh cache
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
-          
+
       - name: Install dependencies
         run: |
           flutter doctor
@@ -79,9 +79,9 @@ jobs:
           fatal-infos: false
           fatal-warnings: false
           annotate: false
-          
+
       - name: Build APK
-        run: flutter build apk
+        run: flutter build apk --dart-define=APP_ENV='Stage' --release
       - name: Upload APK to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -89,7 +89,7 @@ jobs:
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: stage_group
           releaseNotes: 'CI ${{ github.event_name }} build. CI number ${{ github.run_number }}.'
-          file: build/app/outputs/apk/release/app-release.apk
+          file: build/app/outputs/flutter-apk/app-release.apk
 
       - name: Commit auto increased build number
         if: ${{ steps.should_run.outputs.should_run != 'false' && github.event_name == 'schedule' }}
